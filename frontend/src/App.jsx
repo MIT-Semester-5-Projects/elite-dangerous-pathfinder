@@ -1,35 +1,51 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import './App.css';
+import eliteDlogo from './assets/eliteDlogo.png';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="app-container">
+      <div className="pathfinder">
+        <div className="header">
+          <img src={eliteDlogo} alt="Elite Dangerous Logo" className="logo" />
+          <h1>ELITE DANGEROUS PATHFINDER</h1>
+        </div>
+
+        <div className="content">
+          <div className="neutron-router">
+            <h2>Neutron Router</h2>
+            <p>Travel between neutron star systems</p>
+
+            <div className="input-group">
+              <label>Source System</label>
+              <input type="text" placeholder="Source System" />
+            </div>
+
+            <button className="btn">Add via +</button>
+            <button className="btn">Reverse ↔</button>
+
+            <div className="input-group">
+              <label>Destination System</label>
+              <input type="text" placeholder="Destination System" />
+            </div>
+
+            <div className="input-double">
+              <input type="text" placeholder="Range(LY)" />
+              <input type="text" placeholder="Efficiency(%)" />
+            </div>
+
+            <button className="calculate-btn">Calculate</button>
+          </div>
+
+          <div className="result-section">
+            <h2>Result</h2>
+          </div>
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
+
+
