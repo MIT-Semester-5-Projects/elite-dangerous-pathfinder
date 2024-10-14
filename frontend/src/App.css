@@ -30,17 +30,22 @@ body, html {
 }
 
 .header {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  padding: 2px;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
-  margin-bottom: 20px;
+  flex-direction: row;
+  margin-bottom: 10px;
 }
 
 .header .logo {
   width: 80px;
   height: auto;
   margin-bottom: 10px;
+  cursor: pointer;
 }
 
 h1 {
@@ -64,10 +69,22 @@ h1 {
   color: white;
 }
 
+.heading-container {
+  background-color: rgba(217, 217, 217);
+  border-radius: 10px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  margin-bottom: 15px;
+}
+
 .neutron-router h2, .result-section h2 {
   font-size: 18px;
   text-align: center;
   margin-bottom: 10px;
+  color: black;
 }
 
 .neutron-router p {
@@ -78,6 +95,7 @@ h1 {
 
 .input-group {
   margin-bottom: 10px;
+  padding-right: 20px;
 }
 
 .input-group input {
@@ -86,7 +104,7 @@ h1 {
   border-radius: 5px;
   border: none;
   outline: none;
-  margin-top: 5px;
+  margin-top: 10px;
 }
 
 .btn {
@@ -98,6 +116,15 @@ h1 {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-via-btn {
+  margin-bottom: 5px; /* Adds extra space below Add via button */
+}
+
+.btn:hover {
+  background-color: #4a4e4a; /* Hover effect for buttons */
 }
 
 .input-double {
@@ -124,6 +151,11 @@ h1 {
   border-radius: 5px;
   margin-top: 20px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.calculate-btn:hover {
+  background-color: #228B22;
 }
 
 .result-section {
@@ -131,4 +163,19 @@ h1 {
   justify-content: center;
   align-items: center;
   height: 100%;
+}
+
+.delete-btn {
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.delete-btn:hover {
+  background-color: #DC143C;
 }
