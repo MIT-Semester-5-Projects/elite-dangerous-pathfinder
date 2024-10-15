@@ -1,6 +1,5 @@
-use std::{fs::File, io::BufReader};
-
 use serde_json::Value;
+use std::{fs::File, io::BufReader};
 
 mod coords;
 mod dijkstra;
