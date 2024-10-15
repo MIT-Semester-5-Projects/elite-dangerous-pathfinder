@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./App.css";
 import eliteDlogo from "./assets/eliteDlogo.png";
-import { FaTrashAlt } from "react-icons/fa"; // Importing the trash icon
+import { FaTrashAlt } from "react-icons/fa";
 
 function App() {
   const [source, setSource] = useState("");
