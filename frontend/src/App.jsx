@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import './App.css';
-import eliteDlogo from './assets/eliteDlogo.png';
-import { FaTrashAlt } from 'react-icons/fa';  // Importing the trash icon
+import React, { useState } from "react";
+import "./App.css";
+import eliteDlogo from "./assets/eliteDlogo.png";
+import { FaTrashAlt } from "react-icons/fa"; // Importing the trash icon
 
 function App() {
-  const [source, setSource] = useState('');
-  const [destination, setDestination] = useState('');
+  const [source, setSource] = useState("");
+  const [destination, setDestination] = useState("");
   const [viaSystems, setViaSystems] = useState([]);
 
   const handleAddVia = () => {
-    setViaSystems([...viaSystems, '']);
+    setViaSystems([...viaSystems, ""]);
   };
 
   const handleReverse = () => {
@@ -33,16 +33,21 @@ function App() {
     <div className="app-container">
       <div className="pathfinder">
         <div className="header">
-          <img src={eliteDlogo} alt="Elite Dangerous Logo" className="logo" onClick={() => window.location.reload()} />
+          <img
+            src={eliteDlogo}
+            alt="Elite Dangerous Logo"
+            className="logo"
+            onClick={() => window.location.reload()}
+          />
           <h1>ELITE DANGEROUS PATHFINDER</h1>
         </div>
 
         <div className="content">
           <div className="neutron-router">
             <div className="heading-container">
-              <h2>Neutron Router</h2>
+              <h2>Star System Router</h2>
             </div>
-            <p>Travel between neutron star systems</p>
+            <p>Travel between star systems</p>
 
             <div className="input-group">
               <label>Source System</label>
@@ -62,14 +67,23 @@ function App() {
                   value={via}
                   onChange={(e) => handleViaChange(index, e.target.value)}
                 />
-                <button className="delete-btn" onClick={() => handleDeleteVia(index)}>
+                <button
+                  className="delete-btn"
+                  onClick={() => handleDeleteVia(index)}
+                >
                   <FaTrashAlt />
                 </button>
               </div>
             ))}
 
-            <button className="btn add-via-btn" onClick={handleAddVia}>Add Via +</button>
-            <button className="btn reverse-btn" onClick={handleReverse}>Reverse ⇆</button><br/><br />
+            <button className="btn add-via-btn" onClick={handleAddVia}>
+              Add Via +
+            </button>
+            <button className="btn reverse-btn" onClick={handleReverse}>
+              Reverse ⇆
+            </button>
+            <br />
+            <br />
 
             <div className="input-group">
               <label>Destination System</label>
@@ -101,8 +115,3 @@ function App() {
 }
 
 export default App;
-
-
-
-
-
