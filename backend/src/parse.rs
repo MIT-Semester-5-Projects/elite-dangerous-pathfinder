@@ -7,7 +7,7 @@ pub fn parse_map_data(map_data_json: &Value) -> Vec<System> {
     if let Some(systems) = map_data_json.as_array() {
         for system in systems {
             if let (Some(id64), Some(coords)) = (
-                system.get("id64").and_then(|id| id.as_i64()),
+                system.get("id64").and_then(|id| id.as_u64()),
                 system.get("coords"),
             ) {
                 let x = coords.get("x").and_then(|x| x.as_f64()).unwrap_or(0.0);

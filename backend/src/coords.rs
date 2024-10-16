@@ -7,11 +7,11 @@ pub struct Coord {
 
 #[derive(Clone, Copy)]
 pub struct System {
-    pub id64: i64,
+    pub id64: u64,
     pub coords: Coord,
 }
 
-pub fn get_coords(system_id: i64, map_data: &[System]) -> Coord {
+pub fn get_coords(system_id: u64, map_data: &[System]) -> Coord {
     let mut low = 0;
     let mut high = map_data.len() as isize - 1;
 
@@ -41,10 +41,10 @@ pub fn euclidean(point_a: Coord, point_b: Coord) -> f64 {
 }
 
 pub fn get_neighbours(
-    curr_system: i64,
+    curr_system: u64,
     jump_distance: f64,
     map_data: &[System],
-) -> Vec<(i64, Coord)> {
+) -> Vec<(u64, Coord)> {
     let mut neighbours = Vec::new();
     let curr_coords = get_coords(curr_system, map_data);
 
