@@ -33,13 +33,24 @@ fn lin_search(system_id: i64, map_data: &[System]) -> Coord {
 }
 fn main() {
     // Loading JSON File
-    let file = File::open("../../map-data/systems_1week.json").expect("File Not Found");
+    let file = File::open("../../map-data/systems_1month.json").expect("File Not Found");
     let reader = BufReader::new(file);
     let map_data_json: Value = serde_json::from_reader(reader).expect("Could Not Parse JSON");
     let map_data = parse_map_data(map_data_json);
 
-    let mut writer = Writer::from_path("lin_search.csv");
-    let mut writer = Writer::from_path("bin_search.csv");
+    let mut lin_writer = Writer::from_path("lin_search.csv");
+    let mut bin_writer = Writer::from_path("bin_search.csv");
 
-    for test_no in 1..100 {}
+    for test_no in 1..100 {
+        //splice map_data in increments of 20,000
+        //input_size = map_data.len()
+        //time_start
+        //call bin_search
+        // time_end
+        //time_start
+        //call lin_search
+        //time end
+        // write(time_taken, input size) to both csv files
+        //end
+    }
 }
