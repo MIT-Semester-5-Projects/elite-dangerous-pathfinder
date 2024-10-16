@@ -7,6 +7,8 @@ function App() {
   const [source, setSource] = useState("");
   const [destination, setDestination] = useState("");
   const [viaSystems, setViaSystems] = useState([]);
+  const [range, setRange] = useState("");
+  const [efficiency, setEfficiency] = useState("");
 
   const handleAddVia = () => {
     setViaSystems([...viaSystems, ""]);
@@ -29,6 +31,37 @@ function App() {
     setViaSystems(newViaSystems);
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = {
+      source: parseInt(source),
+      destination: parseInt(destination),
+      via_systems: viaSystems,
+      jump_distance: parseFloat(range),
+      efficiency: parseFloat(efficiency),
+    };
+
+    try {
+      const response = await fetch("http://localhost:3000/api/path-details", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Form submitted successfully:", result);
+      } else {
+        console.error("Error submitting form");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <div className="app-container">
       <div className="pathfinder">
@@ -49,58 +82,83 @@ function App() {
             </div>
             <p>Travel between star systems</p>
 
-            <div className="input-group">
-              <label>Source System</label>
-              <input
-                type="text"
-                placeholder="Source System"
-                value={source}
-                onChange={(e) => setSource(e.target.value)}
-              />
-            </div>
-
-            {viaSystems.map((via, index) => (
-              <div key={index} className="input-group via-group">
+            <form onSubmit={handleSubmit}>
+              <div className="input-group">
+                <label>Source System</label>
                 <input
                   type="text"
-                  placeholder={`Via System ${index + 1}`}
-                  value={via}
-                  onChange={(e) => handleViaChange(index, e.target.value)}
+                  placeholder="Source System"
+                  value={source}
+                  onChange={(e) => setSource(e.target.value)}
+                  required
                 />
-                <button
-                  className="delete-btn"
-                  onClick={() => handleDeleteVia(index)}
-                >
-                  <FaTrashAlt />
-                </button>
               </div>
-            ))}
 
-            <button className="btn add-via-btn" onClick={handleAddVia}>
-              Add Via +
-            </button>
-            <button className="btn reverse-btn" onClick={handleReverse}>
-              Reverse ⇆
-            </button>
-            <br />
-            <br />
+              {viaSystems.map((via, index) => (
+                <div key={index} className="input-group via-group">
+                  <input
+                    type="text"
+                    placeholder={`Via System ${index + 1}`}
+                    value={via}
+                    onChange={(e) => handleViaChange(index, e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="delete-btn"
+                    onClick={() => handleDeleteVia(index)}
+                  >
+                    <FaTrashAlt />
+                  </button>
+                </div>
+              ))}
 
-            <div className="input-group">
-              <label>Destination System</label>
-              <input
-                type="text"
-                placeholder="Destination System"
-                value={destination}
-                onChange={(e) => setDestination(e.target.value)}
-              />
-            </div>
+              <button
+                type="button"
+                className="btn add-via-btn"
+                onClick={handleAddVia}
+              >
+                Add Via +
+              </button>
+              <button
+                type="button"
+                className="btn reverse-btn"
+                onClick={handleReverse}
+              >
+                Reverse ⇆
+              </button>
+              <br />
+              <br />
 
-            <div className="input-double">
-              <input type="text" placeholder="Range (LY)" />
-              <input type="text" placeholder="Efficiency (%)" />
-            </div>
+              <div className="input-group">
+                <label>Destination System</label>
+                <input
+                  type="text"
+                  placeholder="Destination System"
+                  value={destination}
+                  onChange={(e) => setDestination(e.target.value)}
+                  required
+                />
+              </div>
 
-            <button className="calculate-btn">Calculate</button>
+              <div className="input-double">
+                <input
+                  type="text"
+                  placeholder="Range (LY)"
+                  value={range}
+                  onChange={(e) => setRange(e.target.value)}
+                />
+                <input
+                  type="text"
+                  placeholder="Efficiency (%)"
+                  value={efficiency}
+                  onChange={(e) => setEfficiency(e.target.value)}
+                />
+              </div>
+
+              <button type="submit" className="calculate-btn">
+                Calculate
+              </button>
+            </form>
           </div>
 
           <div className="result-section">

@@ -1,43 +1,15 @@
-use std::cmp::Ordering;
 use std::collections::{BinaryHeap, HashMap, HashSet};
 
 use crate::coords::System;
 use crate::coords::{euclidean, get_coords, get_neighbours};
+use crate::state::State;
 
-#[derive(Clone)]
-struct State {
-    cost: f64,
-    system_id: i64,
-}
-
-// Implementing PartialEq and Ord manually so we don't need Eq for f64
-impl PartialEq for State {
-    fn eq(&self, other: &Self) -> bool {
-        self.cost == other.cost && self.system_id == other.system_id
-    }
-}
-
-impl Eq for State {}
-
-impl Ord for State {
-    fn cmp(&self, other: &Self) -> Ordering {
-        // Reverse order so BinaryHeap behaves like a min-heap
-        other.cost.partial_cmp(&self.cost).unwrap()
-    }
-}
-
-impl PartialOrd for State {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.cmp(other))
-    }
-}
-
-pub fn naive_dijkstra(
-    start_system: i64,
-    goal_system: i64,
+pub fn dijkstra(
+    start_system: u64,
+    goal_system: u64,
+    jump_distance: f64,
     map_data: &[System],
-) -> (HashMap<i64, f64>, Vec<i64>) {
-    let jump_distance = 60.0;
+) -> (HashMap<u64, f64>, Vec<u64>) {
     let mut epoch = 0;
 
     let mut priority_queue = BinaryHeap::new();
@@ -102,10 +74,10 @@ pub fn naive_dijkstra(
 
 // Function to reconstruct the path from start to goal using the predecessor map
 fn reconstruct_path(
-    predecessors: &HashMap<i64, i64>,
-    start_system: i64,
-    goal_system: i64,
-) -> Vec<i64> {
+    predecessors: &HashMap<u64, u64>,
+    start_system: u64,
+    goal_system: u64,
+) -> Vec<u64> {
     let mut path = Vec::new();
     let mut current_system = goal_system;
 
