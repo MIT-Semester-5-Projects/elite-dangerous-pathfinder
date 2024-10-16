@@ -29,6 +29,7 @@ struct PathDetails {
 struct Path {
     jumps: usize,
     path: Vec<u64>,
+    distance: f64,
 }
 
 #[tokio::main]
@@ -56,7 +57,7 @@ async fn find_path(Json(payload): Json<PathDetails>) -> Json<Path> {
     // Log the received data for debugging
     println!("Received PathDetails: {:?}", payload);
 
-    let file = File::open("../map-data/systems_1week.json").expect("Could not open file");
+    let file = File::open("map-data/systems_1week.json").expect("Could not open file");
     let reader = BufReader::new(file);
     let map_data_json: Value = serde_json::from_reader(reader).expect("Could not parse JSON");
 
@@ -70,7 +71,7 @@ async fn find_path(Json(payload): Json<PathDetails>) -> Json<Path> {
     let jump_distance = payload.jump_distance;
     // let efficiency = payload.efficiency;
 
-    let (_results, path) = dijkstra(source, destination, jump_distance, &map_data);
+    let (results, path) = dijkstra(source, destination, jump_distance, &map_data);
 
     if !path.is_empty() {
         println!("Path found: {:?}", path);
@@ -82,6 +83,7 @@ async fn find_path(Json(payload): Json<PathDetails>) -> Json<Path> {
     let response = Path {
         jumps: path.len(),
         path,
+        distance: *results.get(&destination).unwrap(),
     };
 
     Json(response)
