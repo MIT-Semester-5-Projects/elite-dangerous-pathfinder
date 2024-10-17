@@ -1,10 +1,12 @@
 // mod astar;
+mod astar;
 mod coords;
 mod dijkstra;
 mod parse;
 mod state;
 
 // use astar::astar;
+use astar::astar;
 use dijkstra::dijkstra;
 use parse::parse_map_data;
 use std::{fs::File, io::BufReader};
@@ -79,11 +81,18 @@ async fn find_path(Json(payload): Json<PathDetails>) -> Json<Path> {
         println!("No path found.");
     }
 
+    let distance = if let Some(x) = results.get(&destination) {
+        x
+    } else {
+        &0.00
+    };
+
     // Create a response based on the received data
     let response = Path {
         jumps: path.len(),
         path,
-        distance: *results.get(&destination).unwrap(),
+        // dhstance: *results.get(&destination).unwrap(),
+        distance: *distance,
     };
 
     Json(response)
