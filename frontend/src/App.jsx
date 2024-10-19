@@ -10,6 +10,9 @@ function App() {
   const [range, setRange] = useState("");
   const [efficiency, setEfficiency] = useState("");
 
+  const [resultData, setResultData] = useState(null);
+  const [loading, setLoading] = useState(false);
+
   const handleAddVia = () => {
     setViaSystems([...viaSystems, ""]);
   };
@@ -33,6 +36,8 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setResultData(null);
 
     const formData = {
       source: parseInt(source),
@@ -54,11 +59,14 @@ function App() {
       if (response.ok) {
         const result = await response.json();
         console.log("Form submitted successfully:", result);
+        setResultData(result);
       } else {
         console.error("Error submitting form");
       }
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -149,7 +157,7 @@ function App() {
                 />
                 <input
                   type="text"
-                  placeholder="Efficiency (%)"
+                  placeholder="Ship Weight (Tons)"
                   value={efficiency}
                   onChange={(e) => setEfficiency(e.target.value)}
                 />
@@ -165,6 +173,57 @@ function App() {
             <div className="heading-container">
               <h2>Result</h2>
             </div>
+
+            {loading && (
+              <div className="loader-container">
+                <div className="loader"></div>
+              </div>
+            )}
+
+            {!loading && resultData && (
+              <div className="result-details">
+                <p>Estimated Jumps: {resultData.jumps}</p>
+                <p>Distance: {resultData.distance} LY</p>
+
+                <div className="path-container">
+                  <table className="result-table">
+                    <thead>
+                      <tr>
+                        <th>S.No</th>
+                        <th>System ID</th>
+                        <th>Distance (LY)</th>
+                        <th>Jumps</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {resultData.path.map((system, index) => (
+                        <tr
+                          key={index}
+                          className={`${
+                            index === 0
+                              ? "source-row"
+                              : index === resultData.path.length - 1
+                              ? "destination-row"
+                              : "intermediate-row"
+                          }`}
+                        >
+                          <td>{index + 1}</td>
+                          <td>{system.id}</td>
+                          <td>{system.distance}</td>
+                          <td>{system.jumps}</td>
+                        </tr>
+                      ))}
+                      <tr className="total-row">
+                        <td></td>
+                        <td>Total</td>
+                        <td>{resultData.distance}</td>
+                        <td>{resultData.jumps}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
