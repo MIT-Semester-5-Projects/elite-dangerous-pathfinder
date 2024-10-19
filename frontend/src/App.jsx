@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./App.css";
 import eliteDlogo from "./assets/eliteDlogo.png";
 import { FaTrashAlt } from "react-icons/fa";
@@ -8,7 +8,7 @@ function App() {
   const [destination, setDestination] = useState("");
   const [viaSystems, setViaSystems] = useState([]);
   const [range, setRange] = useState("");
-  const [efficiency, setEfficiency] = useState("");
+  const [weight, setWeight] = useState("");
 
   const [resultData, setResultData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -44,7 +44,7 @@ function App() {
       destination: parseInt(destination),
       via_systems: viaSystems,
       jump_distance: parseFloat(range),
-      efficiency: parseFloat(efficiency),
+      weight: parseFloat(weight),
     };
 
     try {
@@ -158,8 +158,8 @@ function App() {
                 <input
                   type="text"
                   placeholder="Ship Weight (Tons)"
-                  value={efficiency}
-                  onChange={(e) => setEfficiency(e.target.value)}
+                  value={weight}
+                  onChange={(e) => setWeight(e.target.value)}
                 />
               </div>
 
@@ -183,7 +183,7 @@ function App() {
             {!loading && resultData && (
               <div className="result-details">
                 <p>Estimated Jumps: {resultData.jumps}</p>
-                <p>Distance: {resultData.distance} LY</p>
+                <p>Distance: {resultData.distance.toFixed(4)} LY</p>
 
                 <div className="path-container">
                   <table className="result-table">
@@ -203,20 +203,20 @@ function App() {
                             index === 0
                               ? "source-row"
                               : index === resultData.path.length - 1
-                              ? "destination-row"
-                              : "intermediate-row"
+                                ? "destination-row"
+                                : "intermediate-row"
                           }`}
                         >
                           <td>{index + 1}</td>
-                          <td>{system.id}</td>
-                          <td>{system.distance}</td>
-                          <td>{system.jumps}</td>
+                          <td>{resultData.path[index][0]}</td>
+                          <td>{resultData.path[index][1].toFixed(4)}</td>
+                          <td>{resultData.path[index][2]}</td>
                         </tr>
                       ))}
                       <tr className="total-row">
                         <td></td>
                         <td>Total</td>
-                        <td>{resultData.distance}</td>
+                        <td>{resultData.distance.toFixed(4)}</td>
                         <td>{resultData.jumps}</td>
                       </tr>
                     </tbody>
