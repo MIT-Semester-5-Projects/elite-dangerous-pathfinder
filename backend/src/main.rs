@@ -1,3 +1,5 @@
+#[allow(dead_code)]
+#[allow(unused_imports)]
 use astar::a_star;
 use dijkstra::dijkstra;
 use parse::parse_map_data;
@@ -8,16 +10,19 @@ mod dijkstra;
 mod parse;
 mod system;
 
+#[allow(unused_imports)]
 use axum::http::Method;
+
+#[allow(unused_imports)]
 use axum::{extract::Json, routing::post, Router};
 
-use std::collections::HashMap;
 use std::{fs::File, io::BufReader};
 
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
-use tower_http::cors::{Any, CorsLayer}; // Use tower-http's CorsLayer
+#[allow(unused_imports)]
+use tower_http::cors::{Any, CorsLayer};
 
 #[derive(Deserialize, Serialize, Debug)]
 struct PathDetails {
@@ -117,8 +122,8 @@ fn main() {
     let start_system = 10477373803;
     let goal_system = 6681123623626;
 
-    // let (_results, path) = dijkstra(start_system, goal_system, 60.0, &map_data);
-    let (_results, path) = a_star(start_system, goal_system, 60.0, 30000.0, &map_data);
+    let (_results, path) = dijkstra(start_system, goal_system, 60.0, &map_data);
+    // let (_results, path) = a_star(start_system, goal_system, 60.0, 30000.0, &map_data);
 
     if !path.is_empty() {
         println!("Path found: {:?}", path);

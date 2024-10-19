@@ -34,7 +34,11 @@ pub fn dijkstra(
         visited.insert(curr_node);
 
         // Debugging information
-        println!("Current Epoch:{}", epoch);
+        print!("\x1B[2J\x1B[1;1H"); // Clear the screen and move cursor to (1,1)
+        println!("Dijkstra's Pathfinding");
+        println!("Start System: {}", start_system);
+        println!("Goal System: {}", goal_system);
+        println!("Current Epoch: {}", epoch);
         println!("Systems Visited: {}", visited.len());
         println!("Queued Systems: {}", priority_queue.len());
         println!("Cost {}", costs[&curr_node]);
@@ -61,9 +65,9 @@ pub fn dijkstra(
         }
 
         epoch += 1;
-        if epoch % 100 == 0 {
-            println!("{:?}", costs);
-        }
+        // if epoch % 100 == 0 {
+        //     println!("{:?}", costs);
+        // }
     }
 
     let path = reconstruct_path(&predecessors, start_system, goal_system);
