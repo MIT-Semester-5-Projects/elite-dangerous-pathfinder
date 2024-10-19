@@ -9,12 +9,14 @@ mod coords;
 mod dijkstra;
 mod parse;
 mod system;
-
+mod tests {
+    mod search_test;
+}
 use axum::http::Method;
 
 use axum::{extract::Json, routing::post, Router};
 
-use std::{fs::File, io::BufReader};
+use std::{fs::File, io::BufReader, time::Instant};
 
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -84,15 +86,21 @@ async fn find_path(Json(payload): Json<PathDetails>) -> Json<Path> {
     let (results, path);
 
     if algorithm == "Dijkstra" {
+        let now = Instant::now();
         // Assign values to results and path for Dijkstra
         let (dijkstra_results, dijkstra_path) =
             dijkstra(source, destination, jump_distance, &map_data);
+        let elapsed = now.elapsed();
+        println!("Elapsed (Dijkstra) {:.2?}", elapsed);
         results = dijkstra_results;
         path = dijkstra_path;
     } else {
+        let now = Instant::now();
         // Assign values to results and path for A*
         let (a_star_results, a_star_path) =
             a_star(source, destination, jump_distance, ship_weight, &map_data);
+        let elapsed = now.elapsed();
+        println!("Elapsed (A-Star) {:.2?}", elapsed);
         results = a_star_results;
         path = a_star_path;
     }
