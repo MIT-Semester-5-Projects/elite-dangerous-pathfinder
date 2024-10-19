@@ -33,22 +33,24 @@ pub fn a_star(
 
     let mut priority_queue = BinaryHeap::new();
     let mut visited = HashSet::new();
-    let mut costs = HashMap::new();
+    let mut fuel_costs = HashMap::new(); // Stores fuel costs
+    let mut distance_costs = HashMap::new(); // Stores actual distances
     let mut predecessors = HashMap::new(); // To track the predecessor of each system
 
     let goal_coords = get_coords(goal_system, map_data);
 
     // Initialize start system
-    costs.insert(start_system, 0.0);
+    fuel_costs.insert(start_system, 0.0);
+    distance_costs.insert(start_system, 0.0);
     priority_queue.push(AStarState {
-        cost: 0.0,      // g(n)
+        cost: 0.0,      // g(n) (fuel cost)
         heuristic: 0.0, // h(n)
         system_id: start_system,
         ship_mass,
     });
 
     while let Some(AStarState {
-        cost: curr_cost,
+        cost: curr_fuel_cost,
         system_id: curr_node,
         ..
     }) = priority_queue.pop()
@@ -64,10 +66,11 @@ pub fn a_star(
         println!("A-Star Pathfinding");
         println!("Start System: {}", start_system);
         println!("Goal System: {}", goal_system);
-        println!("Current Epoch:{}", epoch);
+        println!("Current Epoch: {}", epoch);
         println!("Systems Visited: {}", visited.len());
         println!("Queued Systems: {}", priority_queue.len());
-        println!("Cost {}", costs[&curr_node]);
+        println!("Fuel Cost: {}", fuel_costs[&curr_node]);
+        println!("Distance: {}", distance_costs[&curr_node]);
 
         if curr_node == goal_system {
             break;
@@ -77,37 +80,39 @@ pub fn a_star(
         for (neighbour_id, neighbour_coords) in neighbours {
             if !visited.contains(&neighbour_id) {
                 let distance = euclidean(get_coords(curr_node, map_data), neighbour_coords);
-                let new_cost = curr_cost + fuel_cost(distance, ship_mass);
+                let new_fuel_cost = curr_fuel_cost + fuel_cost(distance, ship_mass);
+                let new_distance_cost = distance_costs[&curr_node] + distance; // Add actual distance
 
-                if !costs.contains_key(&neighbour_id) || new_cost < costs[&neighbour_id] {
-                    costs.insert(neighbour_id, new_cost);
+                if !fuel_costs.contains_key(&neighbour_id)
+                    || new_fuel_cost < fuel_costs[&neighbour_id]
+                {
+                    fuel_costs.insert(neighbour_id, new_fuel_cost);
+                    distance_costs.insert(neighbour_id, new_distance_cost);
                     predecessors.insert(neighbour_id, curr_node); // Update predecessor
 
                     let t = find_system_by_id(neighbour_id, map_data);
                     if let Some(x) = t {
                         let h = heuristic(x, goal_coords, ship_mass);
                         priority_queue.push(AStarState {
-                            cost: new_cost,
+                            cost: new_fuel_cost,
                             system_id: neighbour_id,
-                            heuristic: new_cost + h, // f(n) = g(n) + h(n)
+                            heuristic: new_fuel_cost + h, // f(n) = g(n) + h(n)
                             ship_mass,
                         });
                     }
-
-                    // Add to the priority queue with f(n) = g(n) + h(n)
                 }
             }
         }
 
         epoch += 1;
         if epoch % 100 == 0 {
-            println!("{:?}", costs);
+            println!("{:?}", fuel_costs);
         }
     }
 
     let path = reconstruct_path(&predecessors, start_system, goal_system);
 
-    (costs, path)
+    (distance_costs, path) // Return actual distances instead of fuel costs
 }
 
 // Function to reconstruct the path from start to goal using the predecessor map
