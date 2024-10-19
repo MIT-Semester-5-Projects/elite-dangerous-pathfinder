@@ -272,7 +272,7 @@ h1 {
   justify-content: center;
   align-items: center;
   height: 100%;
-  padding: 30px;
+  padding: 20px;
 }
 
 .loader {
@@ -287,4 +287,16 @@ h1 {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+.algorithm-dropdown {
+  margin-bottom: 20px;
+}
+
+.algorithm-dropdown select {
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  font-family: 'Space Mono', monospace;
+  background-color: #383838;
 }

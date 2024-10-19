@@ -12,6 +12,7 @@ function App() {
 
   const [resultData, setResultData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [selectedAlgorithm, setSelectedAlgorithm] = useState("Dijkstra");
 
   const handleAddVia = () => {
     setViaSystems([...viaSystems, ""]);
@@ -45,6 +46,7 @@ function App() {
       via_systems: viaSystems,
       jump_distance: parseFloat(range),
       weight: parseFloat(weight),
+      algorithm: selectedAlgorithm,
     };
 
     try {
@@ -172,6 +174,18 @@ function App() {
           <div className="result-section">
             <div className="heading-container">
               <h2>Result</h2>
+            </div>
+
+            <div className="algorithm-dropdown">
+              <label htmlFor="algorithm">Select Algorithm: </label>
+              <select
+                id="algorithm"
+                value={selectedAlgorithm}
+                onChange={(e) => setSelectedAlgorithm(e.target.value)}
+              >
+                <option value="Dijkstra">Dijkstra</option>
+                <option value="A-Star">A-Star</option>
+              </select>
             </div>
 
             {loading && (
