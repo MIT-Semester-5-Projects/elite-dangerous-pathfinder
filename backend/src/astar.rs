@@ -33,22 +33,24 @@ pub fn a_star(
 
     let mut priority_queue = BinaryHeap::new();
     let mut visited = HashSet::new();
-    let mut costs = HashMap::new();
+    let mut costs = HashMap::new(); // Path cost, excluding fuel
+    let mut fuel_costs = HashMap::new(); // Fuel costs, used for the algorithm
     let mut predecessors = HashMap::new(); // To track the predecessor of each system
 
     let goal_coords = get_coords(goal_system, map_data);
 
     // Initialize start system
-    costs.insert(start_system, 0.0);
+    costs.insert(start_system, 0.0); // Path cost (distance) starts at 0
+    fuel_costs.insert(start_system, 0.0); // Fuel cost starts at 0
     priority_queue.push(AStarState {
-        cost: 0.0,      // g(n)
-        heuristic: 0.0, // h(n)
+        cost: 0.0,      // g(n) - fuel cost
+        heuristic: 0.0, // h(n) - heuristic
         system_id: start_system,
         ship_mass,
     });
 
     while let Some(AStarState {
-        cost: curr_cost,
+        cost: curr_fuel_cost, // This is the fuel cost used in the algorithm
         system_id: curr_node,
         ..
     }) = priority_queue.pop()
@@ -64,10 +66,12 @@ pub fn a_star(
         println!("A Star Pathfinding");
         println!("Start System: {}", start_system);
         println!("Goal System: {}", goal_system);
-        println!("Current Epoch:{}", epoch);
+        println!("Current Epoch: {}", epoch);
         println!("Systems Visited: {}", visited.len());
         println!("Queued Systems: {}", priority_queue.len());
-        println!("Cost {}", costs[&curr_node]);
+        println!("Path Cost (excluding fuel): {}", costs[&curr_node]);
+        println!("Fuel Cost: {}", fuel_costs[&curr_node]);
+
         // If we've reached the goal, stop
         if curr_node == goal_system {
             break;
@@ -76,33 +80,35 @@ pub fn a_star(
         let neighbours = get_neighbours(curr_node, jump_distance, map_data);
         for (neighbour_id, neighbour_coords) in neighbours {
             if !visited.contains(&neighbour_id) {
+                // Calculate Euclidean distance (path length)
                 let distance = euclidean(get_coords(curr_node, map_data), neighbour_coords);
-                let new_cost = curr_cost + fuel_cost(distance, ship_mass);
+                // Calculate fuel cost based on distance and ship mass
+                let fuel_cost = fuel_cost(distance, ship_mass);
 
-                if !costs.contains_key(&neighbour_id) || new_cost < costs[&neighbour_id] {
-                    costs.insert(neighbour_id, new_cost);
+                let new_fuel_cost = curr_fuel_cost + fuel_cost; // This is the fuel cost for the algorithm
+                let new_path_length = costs[&curr_node] + distance; // This is the path length to be returned
+
+                // Update the path cost (length) in `costs` and fuel cost in `fuel_costs`
+                if !costs.contains_key(&neighbour_id) || new_path_length < costs[&neighbour_id] {
+                    costs.insert(neighbour_id, new_path_length); // Path length update (for result)
+                    fuel_costs.insert(neighbour_id, new_fuel_cost); // Fuel cost update (for algorithm)
                     predecessors.insert(neighbour_id, curr_node); // Update predecessor
 
                     let t = find_system_by_id(neighbour_id, map_data);
                     if let Some(x) = t {
-                        let h = heuristic(x, goal_coords, ship_mass);
+                        let h = heuristic(x, goal_coords, ship_mass); // Heuristic can still involve fuel if desired
                         priority_queue.push(AStarState {
-                            cost: new_cost,
+                            cost: new_fuel_cost, // Use fuel cost for priority queue
                             system_id: neighbour_id,
-                            heuristic: new_cost + h, // f(n) = g(n) + h(n)
+                            heuristic: new_fuel_cost + h, // f(n) = g(n) + h(n) where g(n) is the fuel cost
                             ship_mass,
                         });
                     }
-
-                    // Add to the priority queue with f(n) = g(n) + h(n)
                 }
             }
         }
 
         epoch += 1;
-        // if epoch % 100 == 0 {
-        //     println!("{:?}", costs);
-        // }
     }
 
     let path = reconstruct_path(&predecessors, start_system, goal_system);

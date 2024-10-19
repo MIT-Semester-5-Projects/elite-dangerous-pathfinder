@@ -29,6 +29,7 @@ struct PathDetails {
     via_systems: Vec<usize>,
     jump_distance: f64,
     weight: f64,
+    algorithm: String,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -76,9 +77,25 @@ async fn find_path(Json(payload): Json<PathDetails>) -> Json<Path> {
     // let via_systems = &payload.via_systems;
     let jump_distance = payload.jump_distance;
     let ship_weight = payload.weight;
+    let algorithm = payload.algorithm;
 
     // let (results, path) = a_star(source, destination, jump_distance, ship_weight, &map_data);
-    let (results, path) = dijkstra(source, destination, jump_distance, &map_data);
+
+    let (results, path);
+
+    if algorithm == "Dijkstra" {
+        // Assign values to results and path for Dijkstra
+        let (dijkstra_results, dijkstra_path) =
+            dijkstra(source, destination, jump_distance, &map_data);
+        results = dijkstra_results;
+        path = dijkstra_path;
+    } else {
+        // Assign values to results and path for A*
+        let (a_star_results, a_star_path) =
+            a_star(source, destination, jump_distance, ship_weight, &map_data);
+        results = a_star_results;
+        path = a_star_path;
+    }
 
     if !path.is_empty() {
         println!("Path found: {:?}", path);
