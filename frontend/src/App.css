@@ -294,14 +294,20 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
-  
+  font-size: 14px;
 }
 
 .algorithm-dropdown select {
   margin-left: 10px;
-  padding: 10px;
+  padding: 8px;
   border-radius: 5px;
   border: none;
   font-family: 'Space Mono', monospace;
-  background-color: #383838;
+  background-color: #353935;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.algorithm-dropdown select:hover {
+  background-color: #4a4e4a;
 }
