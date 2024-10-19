@@ -290,10 +290,15 @@ h1 {
 }
 
 .algorithm-dropdown {
-  margin-bottom: 20px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
 }
 
 .algorithm-dropdown select {
+  margin-left: 10px;
   padding: 10px;
   border-radius: 5px;
   border: none;
